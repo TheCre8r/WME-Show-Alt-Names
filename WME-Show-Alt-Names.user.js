@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            WME Show Alt Names
 // @description     Shows alt names for selected segments
-// @version         2.0.2.2
+// @version         2.0.2.3
 // @author          The_Cre8r, SAR85
 // @copyright       SAR85 and The_Cre8r
 // @license         CC BY-NC-ND
@@ -10,7 +10,7 @@
 // @include         https://www.waze.com/*/editor/*
 // @include         https://beta.waze.com/*
 // @namespace       https://greasyfork.org/users/9321
-// @require	        https://greasyfork.org/scripts/24851-wazewrap/code/WazeWrap.js?version=158078
+// @require	        https://greasyfork.org/scripts/24851-wazewrap/code/WazeWrap.js
 // @require         http://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js
 // @require         http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js
 // ==/UserScript==
@@ -944,13 +944,14 @@ var jq214 = jQuery.noConflict(true);
      */
     function bootstrap() {
         if ('undefined' !== typeof $ &&
-            'undefined' !== typeof wLib &&
             $('#WazeMap').size() &&
             window.W.selectionManager.events.register &&
             window.W.loginManager.events.register) {
             init();
+            console.log("WME Show Alt Names - Bootloader Started");
         } else {
             setTimeout(function () {
+                console.log("WME Show Alt Names - Bootloader Retrying");
                 bootstrap();
             }, 1000);
         }
