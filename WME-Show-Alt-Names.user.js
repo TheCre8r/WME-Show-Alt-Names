@@ -1,16 +1,14 @@
 // ==UserScript==
 // @name            WME Show Alt Names
 // @description     Shows alt names for selected segments
-// @version         2.0.2.5
+// @version         2.0.2.6
 // @author          The_Cre8r, SAR85
 // @copyright       SAR85 and The_Cre8r
 // @license         CC BY-NC-ND
 // @grant           none
-// @include         https://www.waze.com/editor/*
-// @include         https://www.waze.com/*/editor/*
-// @include         https://beta.waze.com/*
+// @include     /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/.*$/
 // @namespace       https://greasyfork.org/users/9321
-// @require	        https://greasyfork.org/scripts/24851-wazewrap/code/WazeWrap.js
+// @require	    https://greasyfork.org/scripts/24851-wazewrap/code/WazeWrap.js
 // @require         http://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js
 // @require         http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js
 // ==/UserScript==
@@ -772,12 +770,12 @@ var jq214 = jQuery.noConflict(true);
      * Shows alert box with version information and changes.
      */
     function updateAlert() {
-        var altVersion = '1.0.2',
+        var altVersion =  GM_info.script.version,
             alertOnUpdate = true,
             versionChanges = 'WME Show Alt Names has been updated to ' + altVersion + '.\n';
         versionChanges += 'Changes:\n';
         //versionChanges += '[*] Table can be moved and resized.\n';
-		versionChanges += '[*] Updated city name location\n';
+		versionChanges += '[*] Updated URL inclusions and exclusions for the script to load correctly.\n';
         if (alertOnUpdate && window.localStorage && window.localStorage.altVersion !== altVersion) {
             window.localStorage.altVersion = altVersion;
             alert(versionChanges);
