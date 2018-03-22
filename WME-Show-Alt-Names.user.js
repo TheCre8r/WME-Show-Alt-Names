@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            WME Show Alt Names
 // @description     Shows alt names for selected segments
-// @version         2.0.2.7
+// @version         2.0.2.8
 // @author          The_Cre8r, SAR85
 // @copyright       SAR85 and The_Cre8r
 // @license         CC BY-NC-ND
@@ -19,7 +19,7 @@
 // p.s. If SAR85 does return, all of my work may be surrendered.
 //-----------------------------------------------------------------------------------------------
 
-/* global wLib */
+/* global WazeWrap */
 /* global W */
 /* global OL */
 
@@ -637,7 +637,7 @@ var jq214 = jQuery.noConflict(true);
 
 
 	/**
-	 * Uses wLib to fetch route from routing server based on selected segments 
+	 * Uses WazeWrap to fetch route from routing server based on selected segments 
      * then attempts to select the route segments.
 	 */
     function performAutoSelect() {
@@ -670,7 +670,7 @@ var jq214 = jQuery.noConflict(true);
         }
 
         /**
-         * Fetches the route (or sub-route) via wLib.
+         * Fetches the route (or sub-route) via WazeWrap.
          * @param {OpenLayers.Feature.Vector} start The starting segment of the 
          * sub-route.
          * @param {OpenLayers.Feature.Vector} end The ending segment of the 
@@ -682,7 +682,7 @@ var jq214 = jQuery.noConflict(true);
          */
         function fetchRoute(start, end, last, timeout) {
             window.setTimeout(function () {
-                route = new wLib.Model.RouteSelection(start, end, routeCallback, options);
+                route = new WazeWrap.Model.RouteSelection(start, end, routeCallback, options);
                 route.last = last ? true : false;
             }, timeout);
         }
