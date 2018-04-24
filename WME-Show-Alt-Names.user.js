@@ -1,14 +1,14 @@
 // ==UserScript==
 // @name            WME Show Alt Names
 // @description     Shows alt names for selected segments
-// @version         2.0.2.8
+// @version         2.0.3.0
 // @author          The_Cre8r, SAR85
 // @copyright       SAR85 and The_Cre8r
 // @license         CC BY-NC-ND
 // @grant           none
 // @include     /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
 // @namespace       https://greasyfork.org/users/9321
-// @require	    https://greasyfork.org/scripts/24851-wazewrap/code/WazeWrap.js
+// @require	    https://greasyfork.org/scripts/24851-wazewrap/code/WazeWrap.js?version=264605
 // @require         http://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js
 // @require         http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js
 // ==/UserScript==
@@ -157,7 +157,7 @@ var jq214 = jQuery.noConflict(true);
 
 	/**
 	 * Resets the renderIntent of all features on altLayer.
-	 * @param {String} intent Optional parameter specifying the intent. The 
+	 * @param {String} intent Optional parameter specifying the intent. The
      * default intent is 'default'.
 	 */
     function resetRenderIntent(intent) {
@@ -183,10 +183,11 @@ var jq214 = jQuery.noConflict(true);
 	 */
     function selectSegment(id) {
         var seg = id && W.model.segments.get(id);
-        return seg && W.selectionManager.select([seg]);
+        debugger;
+        return seg && W.selectionManager.setSelectedModels([seg]);
     }
 
-	/** 
+	/**
      * Event handler for changing the highlight color for a segment.
 	 * @param {Event} event
 	 */
@@ -207,13 +208,13 @@ var jq214 = jQuery.noConflict(true);
     }
 
 	/**
-	 * Lookup function for the display color of a specified road type. Will 
-     * return the color for the experimental layer if it is activated, 
+	 * Lookup function for the display color of a specified road type. Will
+     * return the color for the experimental layer if it is activated,
      * otherwise it will return the color for the old roads layer.
 	 * @param {Number} type The roadType to look up.
-	 * @returns {Object} Object of form:  
-     * {typeString: 'RoadTypeName', typeColor: '#FFFFFF'}, 
-	 * where RoadTypeName is an abbreviated form of the name of the road type 
+	 * @returns {Object} Object of form:
+     * {typeString: 'RoadTypeName', typeColor: '#FFFFFF'},
+	 * where RoadTypeName is an abbreviated form of the name of the road type
      * and typeColor is the hex value of the display color.
 	 */
     function getRoadColor(type) {
@@ -228,10 +229,10 @@ var jq214 = jQuery.noConflict(true);
     }
 
 	/**
-	 * Data structure for segment information used to build highlight layer 
+	 * Data structure for segment information used to build highlight layer
      * features and the alternate names table.
 	 * @class
-	 * @param {Waze.Feature.Vector.Segment} The segment feature on which to 
+	 * @param {Waze.Feature.Vector.Segment} The segment feature on which to
      * base the new instance.
 	 */
     function Alternate(baseFeature) {
@@ -242,10 +243,10 @@ var jq214 = jQuery.noConflict(true);
 
         this.attributes = baseFeature.model.attributes;
         this.segmentID = this.attributes.id;
-	
+
         // Make a feature for highlighting on the map.
         this.layerFeature = new OL.Feature.Vector(baseFeature.geometry.clone(), this.attributes);
-	
+
         // Store segment name information.
         street = W.model.streets.get(this.attributes.primaryStreetID);
         city = street && W.model.cities.objects[street.cityID].attributes;
@@ -264,7 +265,7 @@ var jq214 = jQuery.noConflict(true);
 
         // Make a table row for displaying segment data.
         this.tableRow = this.createTableRow();
-	
+
         // Add name info to attributes of layer feature and add the feature to the layer.
         // (For compatibility with highlighting functions--old method)
         this.layerFeature.attributes.alt = this.alternates;
@@ -275,7 +276,7 @@ var jq214 = jQuery.noConflict(true);
             var i, n, $row, $cell, roadType;
 
             $row = $('<tr/>').attr('id', 'alt' + this.segmentID);
-		
+
             //add road type to row
             roadType = getRoadColor(this.layerFeature.attributes.roadType);
             $cell = $('<td/>')
@@ -290,14 +291,14 @@ var jq214 = jQuery.noConflict(true);
                     .text(this.layerFeature.attributes.length + ' m')
                     );
             $row.append($cell);
-        
+
             //add id to row
             $cell = $('<td/>')
                 .addClass('altTable-id').css('border-left', 'none')
                 .append($('<div/>')
                     .text(this.segmentID));
             $row.append($cell);
-		
+
             //add primary name and city to row
             $cell = $('<td/>').addClass('altTable-primary')
                 .append($('<div/>')
@@ -308,7 +309,7 @@ var jq214 = jQuery.noConflict(true);
                     .text(this.primaryCity)
                     );
             $row.append($cell);
-		
+
             //add alt names and cities to row
             for (i = 0, n = this.alternates.length; i < n; i++) {
                 $cell = $('<td/>').addClass('altTable-alt')
@@ -363,16 +364,16 @@ var jq214 = jQuery.noConflict(true);
     function populateTable(maxAlternates, sortByNode) {
         'use strict';
         var i, n, j, m, $row;
-	
+
         // Empty table contents.
         $altTable.find('tbody').empty();
         $('.altTable-header-alt').remove();
-	
+
         // Sort if needed.
         if (sortByNode) {
             sortSegmentsByNode();
         }
-	
+
         // Add table rows for each segment.
         for (i = 0, n = selectedSegments.length; i < n; i++) {
             $row = selectedSegments[i].tableRow.clone();
@@ -381,7 +382,7 @@ var jq214 = jQuery.noConflict(true);
             }
             $altTable.append($row);
         }
-	
+
         // Add column headings for alt names.
         for (i = 1, n = maxAlternates; i <= n; i++) {
             $('#altTable-header').append($('<th/>')
@@ -413,7 +414,7 @@ var jq214 = jQuery.noConflict(true);
             name = $el.find('.altTable-primary-name').text() || $el.find('.altTable-alt-name').text(),
             city = $el.find('.altTable-primary-city').text() || $el.find('.altTable-alt-city').text(),
             useCity = $('#altUseCity').prop('checked');
-    
+
         //remove opacity from color so it can be controlled by layer style
         colorValues = color.match(/\d+/g);
         color = 'rgb(' + colorValues[0] + ',' + colorValues[1] + ',' + colorValues[2] + ')';
@@ -433,11 +434,11 @@ var jq214 = jQuery.noConflict(true);
     }
 
 	/**
-	 * Callback for hovering over a segment ID in the table. Highlights the 
+	 * Callback for hovering over a segment ID in the table. Highlights the
      * corresponding altLayer feature black or as specified.
 	 * @callback
 	 * @param {Number} id The segment ID to highlight.
-	 * @param {String} color The rgba-formatted color (optional--default is 
+	 * @param {String} color The rgba-formatted color (optional--default is
      * black).
 	 */
     function colorSegment(id, color) {
@@ -500,17 +501,17 @@ var jq214 = jQuery.noConflict(true);
     }
 
     function isSegmentSelected(){
-        if(W.selectionManager.hasSelectedItems() === false)
+        if(W.selectionManager.hasSelectedFeatures() === false)
             return false;
-        for(i=0; i<W.selectionManager.selectedItems.length; i++){
-            if(W.selectionManager.selectedItems[i].model.type === "segment")
+        for(i=0; i<WazeWrap.getSelectedFeatures().length; i++){
+            if(WazeWrap.getSelectedFeatures()[i].model.type === "segment")
                 return true;
         }
     }
 
 	/**
 	 * Event handler for selection events. Checks for appropriate condions
-	 * for running script, creates Alternate objects as necessary, 
+	 * for running script, creates Alternate objects as necessary,
      * displays/hides UI elements.
 	 * @callback
 	 */
@@ -519,7 +520,7 @@ var jq214 = jQuery.noConflict(true);
         selectedSegments = [];
         //$('#altAutoSelect').hide();
         if (isSegmentSelected() && altLayer.getVisibility()) {
-            selectedItems = W.selectionManager.selectedItems;
+            selectedItems = WazeWrap.getSelectedFeatures();
             if (selectedItems.length > 1) {
                 $('#altAutoSelect').show();
             }
@@ -581,7 +582,7 @@ var jq214 = jQuery.noConflict(true);
     }
 
 	/**
-	 * Sorts the selected segments in "driving order" starting with first 
+	 * Sorts the selected segments in "driving order" starting with first
      * selected based on Node ID.
 	 */
     function sortSegmentsByNode(useFromNode) {
@@ -637,7 +638,7 @@ var jq214 = jQuery.noConflict(true);
 
 
 	/**
-	 * Uses WazeWrap to fetch route from routing server based on selected segments 
+	 * Uses WazeWrap to fetch route from routing server based on selected segments
      * then attempts to select the route segments.
 	 */
     function performAutoSelect() {
@@ -646,7 +647,7 @@ var jq214 = jQuery.noConflict(true);
             options,
             route,
             segmentsToSelect = [],
-            selection = W.selectionManager.selectedItems,
+            selection = WazeWrap.getSelectedFeatures(),
             n = selection.length;
 
         /**
@@ -665,19 +666,19 @@ var jq214 = jQuery.noConflict(true);
                 }
             });
             if (this.last) {
-                W.selectionManager.select(segmentsToSelect);
+                W.selectionManager.setSelectedModels(segmentsToSelect);
             }
         }
 
         /**
          * Fetches the route (or sub-route) via WazeWrap.
-         * @param {OpenLayers.Feature.Vector} start The starting segment of the 
+         * @param {OpenLayers.Feature.Vector} start The starting segment of the
          * sub-route.
-         * @param {OpenLayers.Feature.Vector} end The ending segment of the 
+         * @param {OpenLayers.Feature.Vector} end The ending segment of the
          * sub-route.
-         * @param {Boolean} last Whether the sub-route is the last of the total 
+         * @param {Boolean} last Whether the sub-route is the last of the total
          * route.
-         * @param {Number} The timeout before fetching the route in 
+         * @param {Number} The timeout before fetching the route in
          * milliseconds.
          */
         function fetchRoute(start, end, last, timeout) {
@@ -774,8 +775,7 @@ var jq214 = jQuery.noConflict(true);
             alertOnUpdate = true,
             versionChanges = 'WME Show Alt Names has been updated to ' + altVersion + '.\n';
         versionChanges += 'Changes:\n';
-        //versionChanges += '[*] Table can be moved and resized.\n';
-		versionChanges += '[*] Updated URL inclusions and exclusions for the script to load correctly.\n';
+	versionChanges += '[*] Updating to support latest WME changes (2018-04-24).\n';
         if (alertOnUpdate && window.localStorage && window.localStorage.altVersion !== altVersion) {
             window.localStorage.altVersion = altVersion;
             alert(versionChanges);
@@ -783,8 +783,8 @@ var jq214 = jQuery.noConflict(true);
     }
 
     /**
-     * Initializes the script by adding CSS and HTML to page, registering event 
-     * listeners, adding map layers, checking for beta editor, and running main 
+     * Initializes the script by adding CSS and HTML to page, registering event
+     * listeners, adding map layers, checking for beta editor, and running main
      * functions to check for segments loaded at init and highlighting.
      */
     function init() {
@@ -814,15 +814,15 @@ var jq214 = jQuery.noConflict(true);
 
         // buttons css
         css += '.altOptions-button {margin: 0 0 3px 3px; height: 2em; font-size: 0.8em;}\n';
-	
+
         // Options Menu CSS
         css += '#optionsDiv {display: none; clear: both; border: 1px solid white; padding: 3px; margin: 0 0 3px 0; font-weight: normal;}';
         css += '#optionsDiv td {padding-right: 5px;}';
         css += '#optionsDiv input {margin-right: 3px;}';
-	
+
         //add css to page
         $('<style/>').html(css).appendTo($(document.head));
-        
+
         // add jqui style to page
         $('head').append($('<link/>').attr({
             href: '//ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/themes/le-frog/jquery-ui.min.css',
@@ -833,7 +833,7 @@ var jq214 = jQuery.noConflict(true);
         // Make the options menu.
         optionsHTML = '<div id="altOptions"> <button id="altAutoSelect" class="altOptions-button" style="display: none;">Auto Select</button> <label style="float: right; margin: 3px;"> <input id="altHighlights" type="checkbox">Highlight Alt Names</label> <button id="altOptionsButton" class="altOptions-button" style="float: right;">Show Options</button> </div> <div id="optionsDiv"> <div> <label style="font-weight: normal;"> <input type="checkbox" id="altShowCity">Show city name in table</label> </div> <div> <label style="font-weight: normal;"> <input type="checkbox" id="altUseCity">Use city name in name matching</label> </div> <div> <label style="font-weight: normal;"> <input type="checkbox" id="altSortByNode">Sort table by driving order (experimental)</label> </div> <form> <table> <thead> <tr> <td colspan="2" style="text-align: center; text-decoration: underline; font-weight: bold;">Auto Selection Route Options</td> </tr> </thead> <tbody> <tr> <td> <input type="checkbox" id="altAvoidTolls">Avoid toll roads</td> <td> <input type="checkbox" id="altAvoidFreeways">Avoid freeways</td> </tr> <tr> <td> <input type="checkbox" id="altAvoidLongDirt">Avoid long dirt roads</td> <td> <input type="checkbox" id="altAvoidDirt">Avoid dirt roads</td> </tr> <tr> <td> <input type="checkbox" id="altAllowUturns">Allow U-turns</td> <td> <input type="checkbox" id="altFastest">Fastest route</td> </tr> </tbody> </table> </form> </div>';
         //optionsHTML = '<div id="altOptions"><label style="float: left; margin: 3px;"> <input id="altHighlights" type="checkbox">Highlight Alt Names</label> <button id="altOptionsButton" class="altOptions-button" style="float: left;">Show Options</button> </div> <div id="optionsDiv"> <div> <label style="font-weight: normal;"> <input type="checkbox" id="altShowCity">Show city name in table</label> </div> <div> <label style="font-weight: normal;"> <input type="checkbox" id="altUseCity">Use city name in name matching</label> </div> <div> <label style="font-weight: normal;"> <input type="checkbox" id="altSortByNode">Sort table by driving order (experimental)</label> </div> </div>';
-            
+
         // Make the table to hold segment information.
         $altTable = $('<table/>').attr('id', 'altTable').addClass('altTable');
         $header = $('<thead/>');
@@ -843,7 +843,7 @@ var jq214 = jQuery.noConflict(true);
         $header.append($row);
         $altTable.append($header);
         $altTable.append('<tbody/>');
-	
+
         // Make the main div to hold script content.
         $altDiv = $('<div/>').attr('id', 'altDiv');
         $altDiv.append(optionsHTML);
@@ -884,7 +884,7 @@ var jq214 = jQuery.noConflict(true);
         $altDiv.on('dblclick', 'td.altTable-id', null, function () {
             selectSegment($(this).text());
         });
-	
+
         // Make $altDiv resizable and draggable
         try {
             $altDiv.one('resize', function () {
@@ -899,7 +899,7 @@ var jq214 = jQuery.noConflict(true);
         } catch (err) {
             draggableSupported = false;
         };
-	
+
         // Create the map layers for segment highlighting.
         altStyleMap = new OL.StyleMap({
             default: new OL.Style({
@@ -929,18 +929,18 @@ var jq214 = jQuery.noConflict(true);
         });
 
         W.map.addLayers([highlightLayer, altLayer]);
-	
+
         //check for beta editor due to road layer name differences
         if (location.href.match(/-beta/)) {
             betaEditor = true;
         }
-	
+
         //register WME event listeners
         W.loginManager.events.register('afterloginchanged', null, init);
         W.selectionManager.events.register('selectionchanged', null, checkSelection);
         W.map.events.register('moveend', null, checkAllSegments);
         W.map.getLayersByName('Roads')[0].events.register('visibilitychanged', null, checkSelection);
-	
+
         // Ready to go. Alert user to any updates and check for selected segments.
         updateAlert();
         loadOptions();
