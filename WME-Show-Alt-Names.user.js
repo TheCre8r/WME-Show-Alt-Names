@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            WME Show Alt Names
 // @description     Shows alt names for selected segments
-// @version         2.0.3.0
+// @version         2.0.3.1
 // @author          The_Cre8r, SAR85
 // @copyright       SAR85 and The_Cre8r
 // @license         CC BY-NC-ND
@@ -173,7 +173,7 @@ var jq214 = jQuery.noConflict(true);
 	 * @param {Number} id The ID of the segment.
 	 */
     function panToSegment(id) {
-        var segment = id && W.model.segments.get(id);
+        var segment = id && W.model.segments.getObjectById(id);
         return segment && W.map.moveTo(segment.geometry.getBounds().getCenterLonLat());
     }
 
@@ -182,7 +182,7 @@ var jq214 = jQuery.noConflict(true);
 	 * @param {Number} id The ID of the segment.
 	 */
     function selectSegment(id) {
-        var seg = id && W.model.segments.get(id);
+        var seg = id && W.model.segments.getObjectById(id);
         debugger;
         return seg && W.selectionManager.setSelectedModels([seg]);
     }
@@ -248,14 +248,14 @@ var jq214 = jQuery.noConflict(true);
         this.layerFeature = new OL.Feature.Vector(baseFeature.geometry.clone(), this.attributes);
 
         // Store segment name information.
-        street = W.model.streets.get(this.attributes.primaryStreetID);
+        street = W.model.streets.getObjectById(this.attributes.primaryStreetID);
         city = street && W.model.cities.objects[street.cityID].attributes;
         this.primaryName = street ? street.name || 'No name' : 'New road';
         this.primaryCity = city ? city.name || 'No city' : 'New road';
 
         this.alternates = [];
         for (i = 0, n = this.attributes.streetIDs.length; i < n; i++) {
-            street = W.model.streets.get(this.attributes.streetIDs[i]);
+            street = W.model.streets.getObjectById(this.attributes.streetIDs[i]);
             city = street && W.model.cities.objects[street.cityID].attributes;
             this.alternates.push({
                 name: street ? street.name || 'No name' : 'New road',
@@ -660,7 +660,7 @@ var jq214 = jQuery.noConflict(true);
             var segIDs, seg;
             segIDs = this.getRouteSegmentIDs()[0];
             segIDs.forEach(function (item) {
-                seg = W.model.segments.get(item);
+                seg = W.model.segments.getObjectById(item);
                 if (seg) {
                     segmentsToSelect.push(seg);
                 }
