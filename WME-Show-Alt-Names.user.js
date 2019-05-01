@@ -1,14 +1,14 @@
 // ==UserScript==
 // @name            WME Show Alt Names
 // @description     Shows alt names for selected segments
-// @version         2.0.3.1
+// @version         2.0.3.2
 // @author          The_Cre8r, SAR85
 // @copyright       SAR85 and The_Cre8r
 // @license         CC BY-NC-ND
 // @grant           none
 // @include     /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
 // @namespace       https://greasyfork.org/users/9321
-// @require	    https://greasyfork.org/scripts/24851-wazewrap/code/WazeWrap.js?version=264605
+// @require	    https://greasyfork.org/scripts/24851-wazewrap/code/WazeWrap.js
 // @require         http://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js
 // @require         http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js
 // ==/UserScript==
