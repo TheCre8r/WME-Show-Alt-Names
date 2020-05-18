@@ -1,16 +1,14 @@
 // ==UserScript==
 // @name            WME Show Alt Names
 // @description     Shows alt names for selected segments
-// @version         2.0.3.2
+// @version         2.0.3.3
 // @author          The_Cre8r, SAR85
 // @copyright       SAR85 and The_Cre8r
 // @license         CC BY-NC-ND
 // @grant           none
-// @include     /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
+// @include         /^https:\/\/(www|beta)\.waze\.com\/(?!user\/)(.{2,6}\/)?editor\/?.*$/
 // @namespace       https://greasyfork.org/users/9321
-// @require	    https://greasyfork.org/scripts/24851-wazewrap/code/WazeWrap.js
-// @require         http://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js
-// @require         http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/jquery-ui.min.js
+// @require	        https://greasyfork.org/scripts/24851-wazewrap/code/WazeWrap.js
 // ==/UserScript==
 //
 // I would like to thank SAR85 for his hard work for this project, unfortunately with his absence there wasn't anyone
@@ -23,9 +21,7 @@
 /* global W */
 /* global OL */
 
-var jq214 = jQuery.noConflict(true);
-
-(function ($) {
+(function () {
     var $altDiv,
         $altTable,
         alternateObjectsArray = [],
@@ -951,20 +947,14 @@ var jq214 = jQuery.noConflict(true);
     /**
      * Checks for key components of the page before initializing the script.
      */
-    function bootstrap() {
-        if ('undefined' !== typeof $ &&
-            $('#WazeMap').size() &&
-            window.W.selectionManager.events.register &&
-            window.W.loginManager.events.register) {
+    function bootstrap(tries = 1) {
+        console.log("bootstrap attempt "+ tries);
+        if (W && W.map && W.model && W.loginManager.user && $ && WazeWrap.Ready) {
             init();
-            console.log("WME Show Alt Names - Bootloader Started");
-        } else {
-            setTimeout(function () {
-                console.log("WME Show Alt Names - Bootloader Retrying");
-                bootstrap();
-            }, 1000);
+        } else if (tries < 1000) {
+            setTimeout(() => bootstrap(tries++), 200);
         }
     }
 
     bootstrap();
-} (jq214));
+})();
