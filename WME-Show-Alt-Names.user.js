@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            WME Show Alt Names
 // @description     Shows alt names for selected segments
-// @version         2.0.3.3
+// @version         2.0.3.4
 // @author          The_Cre8r, SAR85
 // @copyright       SAR85 and The_Cre8r
 // @license         CC BY-NC-ND
@@ -818,13 +818,6 @@
 
         //add css to page
         $('<style/>').html(css).appendTo($(document.head));
-
-        // add jqui style to page
-        $('head').append($('<link/>').attr({
-            href: '//ajax.googleapis.com/ajax/libs/jqueryui/1.11.1/themes/le-frog/jquery-ui.min.css',
-            rel: 'stylesheet',
-            type: 'text/css'
-        }));
 
         // Make the options menu.
         optionsHTML = '<div id="altOptions"> <button id="altAutoSelect" class="altOptions-button" style="display: none;">Auto Select</button> <label style="float: right; margin: 3px;"> <input id="altHighlights" type="checkbox">Highlight Alt Names</label> <button id="altOptionsButton" class="altOptions-button" style="float: right;">Show Options</button> </div> <div id="optionsDiv"> <div> <label style="font-weight: normal;"> <input type="checkbox" id="altShowCity">Show city name in table</label> </div> <div> <label style="font-weight: normal;"> <input type="checkbox" id="altUseCity">Use city name in name matching</label> </div> <div> <label style="font-weight: normal;"> <input type="checkbox" id="altSortByNode">Sort table by driving order (experimental)</label> </div> <form> <table> <thead> <tr> <td colspan="2" style="text-align: center; text-decoration: underline; font-weight: bold;">Auto Selection Route Options</td> </tr> </thead> <tbody> <tr> <td> <input type="checkbox" id="altAvoidTolls">Avoid toll roads</td> <td> <input type="checkbox" id="altAvoidFreeways">Avoid freeways</td> </tr> <tr> <td> <input type="checkbox" id="altAvoidLongDirt">Avoid long dirt roads</td> <td> <input type="checkbox" id="altAvoidDirt">Avoid dirt roads</td> </tr> <tr> <td> <input type="checkbox" id="altAllowUturns">Allow U-turns</td> <td> <input type="checkbox" id="altFastest">Fastest route</td> </tr> </tbody> </table> </form> </div>';
